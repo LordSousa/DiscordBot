@@ -1,4 +1,4 @@
-const {prefix, token} = require("./config.json");
+const { prefix, token } = require("./config.json");
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const readyArray = ["rdy", "ready"];
@@ -10,12 +10,13 @@ client.once("ready", () => {
 
 client.on("message", message => {
 	console.log(message.author.username);
+	//	message.channel.send(`<${message.author.displayAvatarURL({ format: "png", dynamic: true })}>`);
 	const messageContent = message.content.toLowerCase();
 
-	if(messageContent.startsWith(`${prefix}listjabronis`)) {
+	if (messageContent.startsWith(`${prefix}listjabronis`)) {
 		listJabronis(message);
 	}
-	else if(readyArray.includes(messageContent) && !jabronisArray.includes(message.author.username)) {
+	else if (readyArray.includes(messageContent) && !jabronisArray.includes(message.author.username)) {
 		jabronisArray.push(message.author.username);
 		listJabronis(message);
 	}
