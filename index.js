@@ -9,25 +9,33 @@ client.once("ready", () => {
 });
 
 client.on("message", message => {
-	console.log(message.author.username);
+	
 	//	message.channel.send(`<${message.author.displayAvatarURL({ format: "png", dynamic: true })}>`);
 	const messageContent = message.content.toLowerCase();
+	const messageChannel = message.channel;
+	const messageUsername = message.author.username;
 
-	if (messageContent.startsWith(`${prefix}listjabronis`)) {
-		listJabronis(message);
-	}
-	else if (readyArray.includes(messageContent) && !jabronisArray.includes(message.author.username)) {
-		jabronisArray.push(message.author.username);
-		listJabronis(message);
-	}
+	console.log(messageChannel + " | " + messageUsername + ": " + messageContent);
+
+	rdyJabronis(messageContent,messageChannel,messageUsername);
 });
 
-function listJabronis(message) {
+function rdyJabronis(content, channel, username) {
+	if (content.startsWith(`${prefix}listjabronis`)) {
+		listJabronis(channel);
+	}
+	else if (readyArray.includes(content) && !jabronisArray.includes(username)) {
+		jabronisArray.push(username);
+		listJabronis(channel);
+	}
+}
+
+function listJabronis(channel) {
 	let completeListMarkDown = "\n >>>  	__**Jabronis**__ \n";
 	jabronisArray.forEach(element => {
 		completeListMarkDown += `${element} :white_check_mark: \n`;
 	});
-	message.channel.send(completeListMarkDown);
+	channel.send(completeListMarkDown);
 }
 
 client.login(token);
