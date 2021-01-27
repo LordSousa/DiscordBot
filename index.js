@@ -2,7 +2,7 @@ const { prefix, token } = require("./config.json");
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const readyArray = ["rdy", "ready"];
-const unreadyArray = ["unready", "letmegobro"];
+const unreadyArray = ["unready", "unrdy"];
 const jabronisArray = [];
 
 client.once("ready", () => {
@@ -11,6 +11,7 @@ client.once("ready", () => {
 
 client.on("message", message => {
 
+	jabronisArray.push(message.author);	
 	//	message.channel.send(`<${message.author.displayAvatarURL({ format: "png", dynamic: true })}>`);
 	const messageContent = message.content.toLowerCase();
 	const messageChannel = message.channel;
@@ -29,13 +30,11 @@ function commands(content, channel, username) {
 	}
 	else if (readyArray.includes(content) && !jabronisArray.includes(username)) {
 		jabronisArray.push(username);
-		listJabronis(channel);
-		channel.send("Who in the blue hell are you?")
+		listJabronis(channel);		
 	}
 	else if (unreadyArray.includes(content) && jabronisArray.includes(username)) {
 		jabronisArray.pop(username);
-		listJabronis(channel);
-		channel.send("It doesn't matter what your name is!")
+		listJabronis(channel);		
 	}
 	else if (content.startsWith(`${prefix}shufflejabronis`)) {
 		shuffleJabronis(channel);
@@ -67,24 +66,34 @@ function shuffleJabronis(channel) {
 			}
 		});
 
-		channel.send("blue: \n" + blueTeamArray);
-		channel.send("red: \n" + redTeamArray);
+		blueTeamArray.forEach(element => {
+			let jabronisEmbed = new Discord.MessageEmbed()
+				.setTitle(`${element.username}`)
+				.setColor(0x00a5ff)									
+				.setImage(`${element.displayAvatarURL({ dynamic: true })}`)			
+			channel.send(jabronisEmbed);
+		});
+
+		redTeamArray.forEach(element => {
+			let jabronisEmbed = new Discord.MessageEmbed()
+				.setTitle(`${element.username}`)
+				.setColor(0xda4f4f)									
+				.setImage(`${element.displayAvatarURL({ dynamic: true })}`)			
+			channel.send(jabronisEmbed);
+		});		
 	}
 }
 
 function listJabronis(channel) {
-	//let completeListMarkDown = "\n >>>  	__**Jabronis**__ \n";
 
-	
 	jabronisArray.forEach(element => {
-		//completeListMarkDown += `${element.displayAvatarURL()}  ${element} :white_check_mark: \n`;
-		//channel.send(` \n  ${element.username} :white_check_mark: \n ${element.displayAvatarURL()}`);
-		var embed = new Discord.MessageEmbed()
-                    .setColor(0x00a5ff)
-					.setAuthor(`${element.username}`, `${element.displayAvatarURL({ dynamic:true })}`);
-		channel.send(embed);
+		let jabronisEmbed = new Discord.MessageEmbed()
+			.setTitle(`${element.username}`)
+			.setColor(0x00a5ff)									
+			.setImage(`${element.displayAvatarURL({ dynamic: true })}`)			
+		channel.send(jabronisEmbed);
 	});
-	//channel.send(completeListMarkDown);
+
 }
 
 client.login(token);
